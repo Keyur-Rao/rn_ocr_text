@@ -111,14 +111,18 @@ const App = () => {
           console.log("sinle document recogniz");
           response.assets[0].base64 && setImageSource([...imageSource, `${response.assets[0].base64}`]);
           response.assets[0].uri && setImages([...images, response.assets[0].uri]);
+          console.log(response.assets[0].uri);
+
         } else {
           console.log("multiple documents recogniz");
           response.assets.forEach(element => {
             setImageSource([...imageSource, `${element.base64}`]);
             setImages([...images, element.uri]);
+            console.log(element.uri);
           });
         }
       }
+
     }
   }
 
@@ -144,7 +148,8 @@ const App = () => {
     for (let index = 0; index < images.length; index++) {
       const element = images[index];
       const recognitizedText = await RNTextDetector.detectFromUri(element);
-      bookObj.push({page: index, context: recognitizedText[0].text})
+      console.log(recognitizedText[0].text);
+      bookObj.push({page: index+1, context: recognitizedText[0].text})
     }
   
 
@@ -168,12 +173,20 @@ const App = () => {
     <ScrollView>
       <Text style={{fontSize: 30, textAlign: 'center'}}>ocr Scanner </Text>
 
-      <TouchableOpacity style={styles.button} onPress={()=> { getPhoto('capture') }}> 
-        <Text> Open camera </Text>
+      <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center'}}>
+        <TouchableOpacity style={styles.button} onPress={()=> { getPhoto('capture') }}> 
+          <Text style={styles.btnText}> Open camera </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={()=> { getPhoto('library') }}> 
+          <Text style={styles.btnText}> From library </Text>
+        </TouchableOpacity>
+      </View>
+
+      <TextInput style={styles.inputText} onChangeText={(text)=> setSearchText(text)} placeholder='Search text here...'/>
+      <TouchableOpacity style={[styles.button, { width: 95, alignSelf: 'flex-end'}]} onPress={searchTextInImage}>
+            <Text style={[styles.btnText]}> Search </Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={()=> { getPhoto('library') }}> 
-        <Text> From library </Text>
-      </TouchableOpacity>
+      { pageNumber && <Text style={styles.ocrTextContainer}> {searchText} found at {pageNumber} page</Text> }
 
       <View style={styles.imgContainer}>
             {imageSource.map((image, index) => {
@@ -184,7 +197,7 @@ const App = () => {
        </View>
 
       <TouchableOpacity style={styles.button} onPress={getText}>
-            <Text> Text recognition </Text>
+            <Text style={styles.btnText}> Recognise text </Text>
       </TouchableOpacity>
 
       <View style={styles.ocrTextContainer}>
@@ -192,19 +205,13 @@ const App = () => {
             book.map((page, index) => {
               return (
                 <View style={styles.singlePage} key={index}>
-                  <Text style={styles.pageNo}> Image : {page.page}</Text>
+                  <Text style={styles.pageNo}> Page : {page.page}</Text>
                   <Text style={styles.text}> Text : {page.context} </Text>
                 </View>
               )
             })
           }
       </View>
-
-      <TextInput style={styles.inputText} onChangeText={(text)=> setSearchText(text)} />
-      <TouchableOpacity style={styles.button} onPress={searchTextInImage}>
-            <Text> Search text in images </Text>
-      </TouchableOpacity>
-      <Text style={styles.ocrTextContainer}> {searchText} found at {pageNumber} page</Text>
     </ScrollView>
     </View>
   )
@@ -214,11 +221,15 @@ export default App;
 
 const styles = StyleSheet.create({
 button: {
-  backgroundColor: 'orange',
+  backgroundColor: '#7EAA92',
   margin: 10,
   padding: 10,
-  width: screenWidth- 30,
   borderRadius: 15,
+},
+btnText: {
+  fontSize: 18,
+  color: 'white',
+  fontVariant: 'small-cap'
 },
 imgContainer: {
   display: 'flex',
@@ -229,29 +240,36 @@ image: {
   width: screenWidth / 2 - 30,
   height: 180,
   margin: 10,
-  backgroundColor: 'grey',
   borderRadius: 30,
 },
 ocrTextContainer: {
-  backgroundColor: 'cyan',
+  fontSize: 22,
   height: 'auto'
 },
 singlePage: {
-  backgroundColor: 'red',
   padding: 10,
   margin: 10,
+  elevation: 1,
+  backgroundColor: 'tomato',
+  borderRadius: 10,
 },
 pageNo: {
   fontSize: 22,
   color: 'black',
-  fontStyle: 'italic'
+  fontWeight: '700'
 },
 text: {
   fontSize: 18,
-  color: 'white',
-  fontWeight: '700'
+  color: 'black',
+  fontStyle: 'italic'
 },
 inputText: {
-  backgroundColor: 'silver'
+  borderWidth: 1,
+  borderColor: '#7EAA92',
+  borderStyle: 'solid',
+  marginHorizontal: 10,
+  paddingHorizontal: 10,
+  borderRadius: 20,
+  color: '#7EAA92',
 }
 });
