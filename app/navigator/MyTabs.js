@@ -1,27 +1,33 @@
 import React from 'react';
-import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Home from '../screens/Home';
 import Add from '../screens/Add';
 import Settings from '../screens/Settings';
+import Colors from '../resources/styles/Colors';
 
 const Tab = createMaterialBottomTabNavigator();
 
 const MyTabs = () => {
   return (
     <Tab.Navigator
+      id='#TabNav'
       initialRouteName="Home"
-      activeColor="#f0edf6"
-      inactiveColor="#3e2465"
-      barStyle={{ backgroundColor: '#694fad' }}
+      activeColor={Colors.primary}
+      inactiveColor={Colors.secondary}
+      barStyle={{ backgroundColor: 'white' }}
+      activeTabBackground={'red'}
     >
       <Tab.Screen
         name="Home"
         component={Home}
         options={{
+          tabBarColor: 'orange',
           tabBarLabel: 'Home',
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home" color={color} size={26} />
+          tabBarIcon: ({ color, focused }) => (
+            <MaterialCommunityIcons name="home" color={ focused ? 'white' : Colors.secondary} size={26} />
           ),
         }}
       />
@@ -29,9 +35,10 @@ const MyTabs = () => {
         name="Add"
         component={Add}
         options={{
-          tabBarLabel: 'Updates',
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="bell" color={color} size={26} />
+          tabBarColor: 'blue',
+          tabBarLabel: 'Add',
+          tabBarIcon: ({ color, focused }) => (
+            <MaterialIcons name="add" color={ focused ? 'white' : Colors.secondary} size={26} />
           ),
         }}
       />
@@ -39,9 +46,10 @@ const MyTabs = () => {
         name="Settings"
         component={Settings}
         options={{
-          tabBarLabel: 'Profile',
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="account" color={color} size={26} />
+          tabBarColor: 'red',
+          tabBarLabel: 'Settings',
+          tabBarIcon: ({ color, focused }) => (
+            <SimpleLineIcons name="settings" color={ focused ? 'white' : Colors.secondary} size={26} />
           ),
         }}
       />
