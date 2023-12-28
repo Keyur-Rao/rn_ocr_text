@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
         position: 'relative'
     },
     img: {
-        width: (width - ((moderateScale(12) * 2) + (moderateScale(10) * 3)))  / 3 , 
+        width: (width - ((moderateScale(12) * 2) + (moderateScale(8) * 3)))  / 3 , 
         height: moderateScale(105),
         borderRadius: moderateScale(8),
     },

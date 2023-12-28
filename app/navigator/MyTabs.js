@@ -1,5 +1,6 @@
 import React from 'react';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+// import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -18,7 +19,6 @@ const MyTabs = () => {
       activeColor={Colors.primary}
       inactiveColor={Colors.secondary}
       barStyle={{ backgroundColor: 'white' }}
-      activeTabBackground={'red'}
     >
       <Tab.Screen
         name="Home"
