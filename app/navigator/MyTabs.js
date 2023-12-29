@@ -15,10 +15,14 @@ const MyTabs = () => {
   return (
     <Tab.Navigator
       id='#TabNav'
-      initialRouteName="Home"
-      activeColor={Colors.primary}
-      inactiveColor={Colors.secondary}
-      barStyle={{ backgroundColor: 'white' }}
+      initialRouteName="Home" // By default render this screen first
+      activeColor={Colors.primary} // active tabBar font color
+      inactiveColor={Colors.secondary} // Inactive tabBars font color
+      barStyle={{ backgroundColor: 'white' }} // TabBar style
+      // sceneAnimationEnabled={true} // Show screen animated view
+      // sceneAnimationType='shifting'
+      style={{ display: 'flex'}}
+      theme={{ colors: { secondaryContainer: Colors.primary, elevation: 2 } }}
     >
       <Tab.Screen
         name="Home"
@@ -27,7 +31,7 @@ const MyTabs = () => {
           tabBarColor: 'orange',
           tabBarLabel: 'Home',
           tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons name="home" color={ focused ? 'white' : Colors.secondary} size={26} />
+            <MaterialCommunityIcons name="home" color={ focused ? 'white' : Colors.secondary} size={24} />
           ),
         }}
       />
@@ -38,7 +42,7 @@ const MyTabs = () => {
           tabBarColor: 'blue',
           tabBarLabel: 'Add',
           tabBarIcon: ({ color, focused }) => (
-            <MaterialIcons name="add" color={ focused ? 'white' : Colors.secondary} size={26} />
+            <MaterialIcons name="add" color={ focused ? 'white' : Colors.secondary} size={24} />
           ),
         }}
       />
@@ -49,7 +53,7 @@ const MyTabs = () => {
           tabBarColor: 'red',
           tabBarLabel: 'Settings',
           tabBarIcon: ({ color, focused }) => (
-            <SimpleLineIcons name="settings" color={ focused ? 'white' : Colors.secondary} size={26} />
+            <SimpleLineIcons name="settings" color={ focused ? 'white' : Colors.secondary} size={24} />
           ),
         }}
       />

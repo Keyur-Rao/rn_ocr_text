@@ -1,6 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import MyTabs from './MyTabs';
 import SplashScreen from '../screens/SplashScreen';
+import CaptureCamera from '../screens/CaptureCamera';
 
 const Stack = createStackNavigator();
 
@@ -10,6 +11,7 @@ const AppNavigation = ()=> {
             <Stack.Screen name='MyTabs'>
                 { ()=> <MyTabs /> } 
             </Stack.Screen>
+            <Stack.Screen name='CaptureCamera' component={CaptureCamera} />
             <Stack.Screen name='SplashScreen' component={SplashScreen} />
         </Stack.Navigator>
     )

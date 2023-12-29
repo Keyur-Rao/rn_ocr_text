@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'wrap',
-        rowGap: moderateScale(16),
+        rowGap: moderateScale(5),
         columnGap: moderateScale(5),
     },
     centeredView: {
