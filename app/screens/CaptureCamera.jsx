@@ -6,6 +6,7 @@ import {
   Text,
   Linking,
   Image,
+  BackHandler,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {Camera, useCameraDevice, useCameraFormat} from 'react-native-vision-camera';
@@ -13,27 +14,38 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Colors from '../resources/styles/Colors';
 import { moderateScale } from '../helpers/Responsive';
 import { Badge } from 'react-native-paper';
+import ImagePicker from 'react-native-image-crop-picker';
 
-function CaptureCamera({ navigation }) {
+const CaptureCamera = ({ navigation }) => {
   const camera = useRef(null);
+  const [showCamera, setShowCamera] = useState(true);
+  const [imageSource, setImageSource] = useState('');
+  const [croppedImages, setCroppedImages] = useState([]);
   const device = useCameraDevice('front', {
     physicalDevices: ['ultra-wide-angle-camera', 'wide-angle-camera', 'telephoto-camera']
   });
-  
   const format = useCameraFormat(device, [
     { photoHdr: true },
   ])
-
-  const [showCamera, setShowCamera] = useState(false);
-  const [imageSource, setImageSource] = useState([]);
+  
 
   useEffect(() => {
-    async function getPermission() {
+    const getPermission = async ()=> {
       const permission = await Camera.requestCameraPermission();
       console.log(`Camera permission status: ${permission}`);
       if (permission === 'denied') await Linking.openSettings();
     }
     getPermission();
+
+    const backActionHandler = () => {
+      console.log('Hardware back button pressed..');
+      setShowCamera(true);
+      setImageSource('');
+      setCroppedImages([]);
+      navigation.navigate('MyTabs')
+    }
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backActionHandler);
+    
   }, []);
 
   const capturePhoto = async () => {
@@ -43,11 +55,39 @@ function CaptureCamera({ navigation }) {
         enableShutterSound: true, // default true
 
       });
-      setImageSource([...imageSource, photo.path]);
+      setImageSource(photo.path);
       setShowCamera(false);
-      console.log(photo.path);
+      console.log("captured image path ", photo.path);
     }
   };
+
+  const cropCapturedImage = (path) => {
+    console.log('IMage crop camera opened...');
+    ImagePicker.openCropper({
+      path,
+      width: 300,
+      height: 400
+    }).then(image => {
+      console.log(image);
+      setCroppedImages([...croppedImages, image.path]);
+    });
+    setShowCamera(true);
+  }
+
+  const openGallery = ()=> {
+    console.log('Open gallery ...');
+    ImagePicker.openPicker({
+      multiple: true,
+      mediaType: 'photo',
+      cropping: true
+    }).then(images => {
+      console.log('open gallery ', images);
+      for (let i = 0; i < images.length; i++) {
+        const image = images[i];
+        setCroppedImages([...croppedImages, image.path]);
+      }
+    })
+  }
 
   if (device == null) {
     return <Text>Camera not available</Text>;
@@ -55,6 +95,7 @@ function CaptureCamera({ navigation }) {
 
   return (
     <View style={styles.container}>
+      { showCamera ? 
         <>
           <SafeAreaView style={StyleSheet.absoluteFill}>
             <Camera
@@ -69,11 +110,10 @@ function CaptureCamera({ navigation }) {
           </SafeAreaView>
 
           <View style={styles.buttonContainer}>
-
             <View style={styles.button}>
               <TouchableOpacity
                 style={[styles.gallery]}
-                onPress={() => capturePhoto()}
+                onPress={() => openGallery()}
               > 
                 <MaterialCommunityIcons name='image' size={20} color={Colors.white} />
               </TouchableOpacity>
@@ -87,21 +127,23 @@ function CaptureCamera({ navigation }) {
                 <View style={styles.innerCam}></View>
               </TouchableOpacity>
             </View>
-            
-              <View style={[styles.button]}>
-              {
-                imageSource && imageSource.length > 0 && (
-                  <View style={{ position: 'relative', width: '70%'}}>
-                    <Image style={styles.imagePreview} source={{ uri: `file://${imageSource[imageSource.length - 1]}`}} />
-                    <Badge style={styles.badge}> {imageSource.length} </Badge> 
-                  </View>
-                )
-              }
-              </View>
+              
+            <View style={[styles.button]}>
+            {
+              croppedImages && croppedImages.length > 0 && (
+                <View style={{ position: 'relative', width: '70%'}}>
+                  <Image style={styles.imagePreview} source={{ uri: `${croppedImages[croppedImages.length - 1]}`}} />
+                  <Badge style={styles.badge}> {croppedImages.length} </Badge> 
+                </View>
+              )
+            }
+            </View>
 
+            {/* <Image source={{uri: 'file:///storage/emulated/0/Android/data/com.imagetotextocr/files/Pictures/85957105-2494-4fdc-a8e7-8e892f3b5825.jpg'}} style={{ width: 50, height: 50}} /> */}
           </View>
         </>
-      
+         : cropCapturedImage(`file://${imageSource}`)
+      }
     </View>
   );
 }

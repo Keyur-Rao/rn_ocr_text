@@ -7,6 +7,8 @@ import {
 
 function Add({ navigation }) {
   useEffect(() => {
+    console.log('REdirect to camera SCREEN');
+    
     const clearTimeOut = setTimeout(() => {
       console.warn("settime out ")
       navigation.navigate("CaptureCamera");
@@ -22,6 +24,7 @@ function Add({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <Text> Camera screeen </Text>
     </View>
   );
 }
